@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <!--mysql驱动位置-->
+    <classPathEntry location="/home/lxz_pc//.m2/repository/mysql/mysql-connector-java/8.0.22/mysql-connector-java-8.0.22.jar" />
+
+    <context id="context1">
+        <!-- 去除自动生成的注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!--jdbc参数-->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/test"
+                        userId="peter" password="820517" />
+
+        <!--domain位置-->
+        <javaModelGenerator targetPackage="com.example.mybatis.domain" targetProject="../mybatis-test/src/main/java/">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+        <!--mapper位置-->
+        <sqlMapGenerator targetPackage="" targetProject="../mybatis-test/src/main/resources/">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!--dao位置-->
+        <javaClientGenerator targetPackage="com.example.mybatis.mapper" targetProject="../mybatis-test/src/main/java/" type="XMLMAPPER">
+            <property name="enableSubPackages" value="falseNR" />
+        </javaClientGenerator>
+
+        <table tableName="dept" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByExample="false" selectByExampleQueryId="false">
+        </table>
+    </context>
+</generatorConfiguration>

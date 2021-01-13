@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace属性的值是和这个文件对应接口的包名和接口名 -->
+<mapper namespace="com.example.mybatis.mapper.DeptMapper">
+<!--接口中有几个方法就要书写几个<select> <insert> <delete> <update>-->
+
+    <!-- resultMap的作用类似于@Results注解，用来执行结果集和Java实体的对应关系-->
+    <resultMap id="deptResultMap" type="com.example.mybatis.domain.Dept">
+    <!--id和@Results注解的id一样，只是一个名字，随意起-->
+    <!-- type属性的后面放的是这个结果集查询出来的结果类型-->
+        <id column="deptno" property="deptNo"/> <!--id表示这列是主键-->
+        <!--column表示数据库中列的名称，property表示实体中属性的名称-->
+        <result column="dname" property="dName"/>
+        <!--result表示这一是一个普通的列，不是主键，不是外键-->
+        <result column="loc" property="loc"/>
+
+<!--        <collection property="employees" ofType="com.example.mybatis.domain.Emp" >-->
+            <!--collection专门用于表示一对多的映射关系，property是实体中集合的名字，ofType是集合中元素的类型-->
+<!--            <id column="empno" property="empNo"/>-->
+<!--            <result column="ename" property="eName" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <result column="job" property="job"/>-->
+<!--            <result column="mgr" property="mgr"/>-->
+<!--            <result column="hiredate" property="hireDate" jdbcType="DATE" javaType="java.time.LocalDate"/>-->
+<!--            <result column="sal" property="sal"/>-->
+<!--            <result column="comm" property="comm"/>-->
+<!--        </collection>-->
+        <collection property="employees" ofType="com.example.mybatis.domain.Emp">
+            <!--collection专门用于表示一对多的映射关系，property是实体中集合的名字，ofType是集合中元素的类型-->
+            <!--            <id column="empno" property="empNo"/>
+                        <result column="ename" property="eName" javaType="java.lang.String" jdbcType="VARCHAR"/>
+                        <result column="job" property="job"/>
+                        <result column="mgr" property="mgr"/>
+                        <result column="hiredate" property="hireDate" jdbcType="DATE" javaType="java.time.LocalDate"/>
+                        <result column="sal" property="sal"/>
+                        <result column="comm" property="comm"/>-->
+            <constructor><!--利用构造器来产生一个Emp的对象，而不是反射-->
+                <!--此处的javaType必须写，否则就会找参数都是Object的构造器
+                另外，这里的顺序需要和构造器中参数的顺序一致-->
+                <idArg column="empno" javaType="java.lang.Integer" />
+                <!--idArg表示主键-->
+                <arg column="ename" javaType="java.lang.String" />
+                <!--arg表示普通列，普通列不是主键不是外键-->
+                <arg column="job" javaType="java.lang.String" />
+                <arg column="mgr" javaType="java.lang.Integer" />
+                <arg column="hiredate" javaType="java.time.LocalDate" />
+                <arg column="sal" javaType="java.lang.Double" />
+                <arg column="comm" javaType="java.lang.Double" />
+            </constructor>
+        </collection>
+    </resultMap>
+
+
+    <!--id对应的方法名字，parameterType指这个方法参数的类型-->
+    <delete id="deleteByDeptNo" parameterType="java.lang.Integer">
+        delete from dept where deptno = #{deptNo}
+    </delete>
+
+    <insert id="save" parameterType="com.example.mybatis.domain.Dept">
+        insert into dept(deptno, dname, loc) values (#{deptNo}, #{dName}, #{loc})
+    </insert>
+
+    <!-- resultType尽量少用或者不用，只有属性和数据库列名能被mybatis框架对应上时才使用-->
+    <!-- resultMap和resultType互斥，resultMap后面的内容是<resultMap中id的内容>-->
+    <select id="findAll" resultMap="deptResultMap">
+        select * from dept d inner join emp e on d.deptno = e.deptno
+    </select>
+</mapper>
